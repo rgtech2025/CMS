@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <title>Student Login</title>
+    <style>
+        body {
+            background-image: url("{% static 'images/background.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            font-family: 'Times New Roman', Times, serif;
+            color: coral;
+            text-align: center;
+        } 
+        .navbar {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+        }
+        .navbar a {
+            color: rgb(39, 64, 222);
+            text-decoration: none;
+            margin: 20px;
+            font-size: 30px;
+        }
+        .time {
+            color: red;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .container {
+            background-color: rgb(10, 10, 10);
+            padding: 50px;
+            margin: 50px auto;
+            width: 50%;
+            border-radius: 10px;
+        }
+        .table {
+            margin: auto;
+            color: white;
+        }
+        .table tr td a {
+            color: aqua;
+            text-decoration: none;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        input:invalid {
+            border: 1px solid red;
+        }
+        input:valid {
+            border: 1px solid green;
+        }
+        input[type="submit"], input[type="reset"], input[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script>
+        function updateTime() {
+            let now = new Date();
+            document.getElementById("time").innerHTML = now.toLocaleTimeString();
+        }
+        setInterval(updateTime, 1000);
+
+        function validateLoginForm() {
+            const email = document.forms["loginForm"]["email"].value;
+            const password = document.forms["loginForm"]["psw"].value;
+
+            // Email validation
+            if (!email.match(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i)) {
+                alert("Please enter a valid email address");
+                return false;
+            }
+
+            // Password validation
+            if (password.length < 8) {
+                alert("Password must be at least 8 characters long");
+                return false;
+            }
+
+            return true;
+        }
+
+        // Real-time validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[required]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    validateField(this);
+                });
+            });
+        });
+
+        function validateField(field) {
+            const errorElement = document.getElementById(field.name + 'Error');
+            
+            if (field.validity.valid) {
+                if (errorElement) errorElement.textContent = '';
+                field.style.borderColor = 'green';
+            } else {
+                showError(field, errorElement);
+                field.style.borderColor = 'red';
+            }
+        }
+
+        function showError(field, errorElement) {
+            if (!errorElement) return;
+            
+            if (field.validity.valueMissing) {
+                errorElement.textContent = 'This field is required';
+            } else if (field.validity.patternMismatch) {
+                errorElement.textContent = field.title || 'Invalid format';
+            } else if (field.validity.tooShort) {
+                errorElement.textContent = `Minimum length is ${field.minLength} characters`;
+            } else if (field.type === 'email' && field.validity.typeMismatch) {
+                errorElement.textContent = 'Please enter a valid email address';
+            }
+        }
+    </script>
+</head>
+
+<body onload="updateTime()">
+    <div class="navbar">
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'std_register' %}">Student</a>
+        <a href="{% url 'faculty_reg' %}">Faculty</a>
+        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'contact' %}">Contact</a>
+        <span class="time" id="time"></span>
+    </div>
+    
+    <div class="container">
+        <h1 style="color: rgb(8, 161, 56); font-size: 30px;">Student Login Form</h1>
+       
+        <form name="loginForm" method="post" onsubmit="return validateLoginForm()">
+            {% csrf_token %}
+            <table class="table">
+                <tr>
+                    <td>Email : </td>
+                    <td>
+                        <input type="email" name="email" placeholder="Enter Email" 
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
+                               title="Please enter a valid email address" required>
+                        <div class="error" id="emailError"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Password : </td>
+                    <td>
+                        <input type="password" name="psw" 
+                               minlength="8" 
+                               title="Password must be at least 8 characters" required>
+                        <div class="error" id="pswError"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="submit" value="LOGIN"> 
+                        <input type="reset" value="RESET">
+                        <a href="{% url 'index' %}"><input type="button" value="HOME"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        If you are not registered <a href="{% url 'faculty_reg' %}">click here to Register</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>

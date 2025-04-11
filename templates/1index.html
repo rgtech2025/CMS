@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!--if you wan to add static files we need to load it in this page -->
+{% load static %}
+<head>
+    <title>CMS</title>
+    <style>
+       body{
+        background-image: url("{%static 'images/background.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        font-family: 'Times New Roman', Times, serif;
+        color: coral;
+        text-align: center;
+
+       } 
+       .navbar{
+        background: rgba(0, 0, 0, 0.8);
+        padding: 15px;
+       }
+       .navbar a{
+        color: rgb(39, 64, 222);
+        text-decoration: none;
+        margin: 20;
+        font-size: 30px;
+       }
+       .time{
+        color: red;
+        font-size: 20px;
+        margin-top: 20px;
+
+       }
+
+    </style>
+    <script>
+        function updateTime(){
+            let now = new Date();
+            document.getElementById("time").innerHTML = now.toLocaleTimeString();
+                    }
+                    setInterval(updateTime,1000);
+    </script>
+
+</head>
+<body onload="updateTime()">
+    <div class="navbar">
+        <a href="{%url 'index' %}">Home</a>
+        <a href="{%url 'std_register' %}">Student</a>
+        <a href="{%url 'faculty_reg' %}">Faculty</a>
+        <a href="{%url 'about' %}">About</a>
+        <a href="{%url 'contact' %}">Contact</a>
+
+    </div>
+   
+    <div class="time">
+        Current Time : <span id="time"></span>
+    </div>
+</body>
+</html>

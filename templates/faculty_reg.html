@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+{%load static %}
+<head>
+    <title>Faculty-Registration</title>
+    <style>
+        body{
+         background-image: url("{%static 'images/background.jpg' %}");
+         background-size: cover;
+         background-position: center;
+         font-family: 'Times New Roman', Times, serif;
+         color: coral;
+         text-align: center;
+ 
+        } 
+        .navbar{
+         background: rgba(0, 0, 0, 0.8);
+         padding: 15px;
+        }
+        .navbar a{
+         color: rgb(39, 64, 222);
+         text-decoration: none;
+         margin: 20;
+         font-size: 30px;
+        }
+        .time{
+         color: red;
+         font-size: 20px;
+         margin-top: 20px;
+ 
+        }
+        .container{
+            background-color: rgb(10, 10, 10);
+            padding: 50px;
+            margin: 50px auto;
+            width: 50%;
+            border-radius: 10px;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+        .table{
+            margin: auto;
+            color: white;
+        }
+        .table tr td a{
+            color: white;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        input:invalid {
+            border: 1px solid red;
+        }
+        input:valid {
+            border: 1px solid green;
+        }
+     </style>
+     <script>
+         function updateTime(){
+             let now = new Date();
+             document.getElementById("time").innerHTML = now.toLocaleTimeString();
+         }
+         setInterval(updateTime,1000);
+
+         function validateForm() {
+             const name = document.forms["registrationForm"]["name"].value;
+             const email = document.forms["registrationForm"]["email"].value;
+             const password = document.forms["registrationForm"]["psw"].value;
+             const mobile = document.forms["registrationForm"]["mno"].value;
+             const address = document.forms["registrationForm"]["addr"].value;
+
+             // Name validation
+             if (name.length < 3) {
+                 alert("Name must be at least 3 characters long");
+                 return false;
+             }
+
+             // Password validation
+             if (password.length < 8) {
+                 alert("Password must be at least 8 characters long");
+                 return false;
+             }
+
+             // Mobile number validation
+             if (mobile.length != 10 || isNaN(mobile)) {
+                 alert("Please enter a valid 10-digit mobile number");
+                 return false;
+             }
+
+             return true;
+         }
+     </script>
+</head>
+<body onload="updateTime()">
+    <div class="navbar">
+        <a href="{%url 'index' %}">Home</a>
+        <a href="{%url 'std_register' %}">Student</a>
+        <a href="{%url 'faculty_reg' %}">Faculty</a>
+        <a href="{%url 'about' %}">About</a>
+        <a href="{%url 'contact' %}">Contact</a>
+    </div>
+    <center class="container">
+        <h1>Faculty registrationForm</h1>
+        <form method="post" id="registrationForm" name="registrationForm">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>Faculty Name:</td>
+                    <td><input type="text" name="name"  title="enter valid data" required></td>
+                    <td>
+                        <!-- <span class="error" id="nameError">Please Enter Valide Name</span> -->
+                        <span class="error-message" id="nameError">Please Enter Valide Name</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td><input type="email" name="email" required></td>
+                    <td>
+                        <span class="error-message" id="emailError">Please Enter Valide Email</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Password:</td>
+                    <td><input type="password" name="psw" required></td>
+                    <td>
+                        <span class="error-message" id="pswError">Please Enter Valide Password password > 6 charectors</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Mobile Number:</td>
+                    <td><input type="number" name="mobile" required></td>
+                    <td>
+                        <span class="error-message" id="mnoError">Please Enter Valide Mobile number == 10 </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Address :</td>
+                    <td><input type="text" name="addr" required></td>
+                    <td>
+                        <span class="error-message" id="addrError">Please Enter Valide Address > 5 chars</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2"><input type="submit" value="Register">
+                    <input type="reset" value="Clear"></td>
+                </tr>
+                <tr>
+                    <td> If you are already Register <a href="{%url 'faculty_login' %}" style="color: aqua;"> here to Login</a></td>
+                </tr>
+            </table>
+            </form>
+            <script>
+                const form = document.forms["registrationForm"];
+                function validateName() {
+                    const nameError = document.getElementById("nameError"); //Error event identification
+                    const name = form["name"].value; //Text box data identification
+                    if (name.length < 3) {
+                        // nameError.textContent = "Name must be at least 3 characters long";
+                        nameError.style.display = "block"; //Show error message if name is invalid
+                        return false;
+                    }   nameError.style.display = "none"; //Hide error message if name is valid
+                        return true;
+                        // nameError.textContent = "";
+                    
+                }
+                function validateEmail() {
+                    const emailError = document.getElementById("emailError");
+                    const email = form["email"].value;
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //Regular expression for email validation
+                    if (!emailRegex.test(email)) {
+                        emailError.style.display = "block"; //Show error message if email is invalid
+                        return false;
+                    }   emailError.style.display = "none"; //Hide error message if email is valid
+                        return true;
+                }
+                function validatePassword() {
+                    const pswError = document.getElementById("pswError");
+                    const password = form["psw"].value;
+                    if (password.length < 6) {
+                        pswError.style.display = "block"; //Show error message if password is invalid
+                        return false;
+                    }   pswError.style.display = "none"; //Hide error message if password is valid
+                        return true;
+                }
+                function validateMobile() {
+                    const mnoError = document.getElementById("mnoError");
+                    const mobile = form["mobile"].value;
+                    if (mobile.length != 10 || isNaN(mobile)) {
+                        mnoError.style.display = "block"; //Show error message if mobile number is invalid
+                        return false;
+                    }   mnoError.style.display = "none"; //Hide error message if mobile number is valid
+                        return true;
+                }
+                function validateAddress() {
+                    const addrError = document.getElementById("addrError");
+                    const address = form["addr"].value;
+                    if (address.length < 5) {
+                        addrError.style.display = "block"; //Show error message if address is invalid
+                        return false;
+                    }   addrError.style.display = "none"; //Hide error message if address is valid
+                        return true;
+                }
+                        form.addEventListener("submit", function(event) {
+                        // event.preventDefault();
+                        const isNameValid = validateName();
+                        const isEmailValid = validateEmail();
+                        const isPasswordValid = validatePassword();
+                        const isMobileValid = validateMobile();
+                        const isAddressValid = validateAddress();
+                  
+                });
+                document.getElementById("name").addEventListener("input", validateName);
+                document.getElementById("email").addEventListener("input", validateEmail);
+                document.getElementById("password").addEventListener("input", validatePassword);
+                document.getElementById("mobile").addEventListener("input", validateMobile);
+                document.getElementById("address").addEventListener("input", validateAddress);
+
+            </script>   
+
+    </center>
+
+</body>
+
+
+</html>

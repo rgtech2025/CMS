@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+{%load static %}
+<head>
+    <title>Student-Registration</title>
+    <style>
+        body{
+         background-image: url("{%static 'images/background.jpg' %}");
+         background-size: cover;
+         background-position: center;
+         font-family: 'Times New Roman', Times, serif;
+         color: coral;
+         text-align: center;
+ 
+        } 
+        .navbar{
+         background: rgba(0, 0, 0, 0.8);
+         padding: 15px;
+        }
+        .navbar a{
+         color: rgb(39, 64, 222);
+         text-decoration: none;
+         margin: 20;
+         font-size: 30px;
+        }
+        .time{
+         color: red;
+         font-size: 20px;
+         margin-top: 20px;
+ 
+        }
+        .container{
+            background-color: rgb(10, 10, 10);
+            padding: 50px;
+            margin: 50px auto;
+            width: 50%;
+            border-radius: 10px;
+        }
+        .table{
+            margin: auto;
+            color: white;
+        }
+        .table tr td a{
+            color: white;
+        }
+ 
+     </style>
+     <script>
+         function updateTime(){
+             let now = new Date();
+             document.getElementById("time").innerHTML = now.toLocaleTimeString();
+                     }
+                     setInterval(updateTime,1000);
+     </script>
+ 
+ </head>
+
+
+
+<body>
+    <body onload="updateTime()">
+        <div class="navbar">
+            <a href="{%url 'index' %}">Home</a>
+            <a href="{%url 'std_register' %}">Profile</a>
+            <a href="{%url 'faculty_reg' %}">Marks</a>
+            <a href="{%url 'about' %}">Attendence</a>
+            <a href="{%url 'contact' %}">Feedback</a>
+            <a href="{%url 'contact' %}">Logout</a>
+    
+        </div>
+<center>
+        <h1>Welcome to - Coollege Management System</h1>
+        <br>
+        <h3> Welcome To Student Dashboard </h3>
+       
+        <form method="post">
+            {% csrf_token %}
+            <h5>My Profile </h5>
+            <table>
+                <tr>
+                    <td>User Name : </td> 
+                    <td><h3 style="color:rgb(227, 24, 24);">{{id.name}}</h3>  </td>     
+                        
+                 
+                </tr>
+                <tr>
+                    <td>Email : </td> 
+                    <td><h3 style="color:rgb(227, 24, 24);">{{id.email}}</h3>  </td>     
+                        
+                 
+                </tr>
+                <tr>
+                    <td>Password : </td> 
+                    <td><h3 style="color:rgb(227, 24, 24);">{{id.psw}}</h3>  </td>     
+                        
+                 
+                </tr>
+                <tr>
+                    <td>Mobile No : </td> 
+                    <td><h3 style="color:rgb(227, 24, 24);">{{id.mno}}</h3>  </td>     
+                        
+                 
+                </tr>
+                <tr>
+                    <td>Address : </td> 
+                    <td><h3 style="color:rgb(227, 24, 24);">{{id.addr}}</h3>  </td>     
+                        
+                 
+                </tr>
+               
+
+
+            </table>
+
+
+
+
+        </form>
+
+
+
+</center>
+
+</body>

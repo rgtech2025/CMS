@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+{%load static %}
+<head>
+    <title>Student-Registration</title>
+    <style>
+        body{
+         background-image: url("{%static 'images/background.jpg' %}");
+         background-size: cover;
+         background-position: center;
+         font-family: 'Times New Roman', Times, serif;
+         color: coral;
+         text-align: center;
+ 
+        } 
+        .navbar{
+         background: rgba(0, 0, 0, 0.8);
+         padding: 15px;
+        }
+        .navbar a{
+         color: rgb(39, 64, 222);
+         text-decoration: none;
+         margin: 20;
+         font-size: 30px;
+        }
+        .time{
+         color: red;
+         font-size: 20px;
+         margin-top: 20px;
+ 
+        }
+        .container{
+            background-color: rgb(10, 10, 10);
+            padding: 50px;
+            margin: 50px auto;
+            width: 50%;
+            border-radius: 10px;
+        }
+        .table{
+            margin: auto;
+            color: white;
+        }
+        .table tr td a{
+            color: white;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        input:invalid {
+            border: 1px solid red;
+        }
+        input:valid {
+            border: 1px solid green;
+        }
+     </style>
+     <script>
+         function updateTime(){
+             let now = new Date();
+             document.getElementById("time").innerHTML = now.toLocaleTimeString();
+         }
+         setInterval(updateTime,1000);
+
+         function validateForm() {
+             const name = document.forms["registrationForm"]["name"].value;
+             const email = document.forms["registrationForm"]["email"].value;
+             const password = document.forms["registrationForm"]["psw"].value;
+             const mobile = document.forms["registrationForm"]["mno"].value;
+             const address = document.forms["registrationForm"]["addr"].value;
+
+             // Name validation
+             if (name.length < 3) {
+                 alert("Name must be at least 3 characters long");
+                 return false;
+             }
+
+             // Password validation
+             if (password.length < 8) {
+                 alert("Password must be at least 8 characters long");
+                 return false;
+             }
+
+             // Mobile number validation
+             if (mobile.length != 10 || isNaN(mobile)) {
+                 alert("Please enter a valid 10-digit mobile number");
+                 return false;
+             }
+
+             return true;
+         }
+     </script>
+</head>
+
+<body onload="updateTime()">
+    <div class="navbar">
+        <a href="{%url 'index' %}">Home</a>
+        <a href="{%url 'std_register' %}">Student</a>
+        <a href="{%url 'faculty_reg' %}">Faculty</a>
+        <a href="{%url 'about' %}">About</a>
+        <a href="{%url 'contact' %}">Contact</a>
+    </div>
+    
+    <center class="container">
+        <h1 style="color: rgb(8, 161, 56); font-size: 30px;">Student Registration Form</h1>
+ 
+        <form name="registrationForm" method="post" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <table class="time">
+                <tr>
+                    <td>Student Name : </td>
+                    <td>
+                        <input type="text" name="name" placeholder="Enter Full Name" 
+                               pattern="[A-Za-z ]{3,}" 
+                               title="Name should contain only letters and be at least 3 characters" required>
+                        <div class="error" id="nameError"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Email : </td>
+                    <td>
+                        <input type="email" name="email" placeholder="Enter Email" 
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+                        <div class="error" id="emailError"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Password : </td>
+                    <td>
+                        <input type="password" name="psw" 
+                               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+                               title="Must contain at least one number, one uppercase and lowercase letter, and at least 8 characters" required>
+                        <div class="error" id="passwordError"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Mobile No : </td>
+                    <td>
+                        <input type="tel" name="mno" placeholder="Enter Mobile No." 
+                               pattern="[0-9]{10}" 
+                               title="Please enter a valid 10-digit mobile number" required>
+                        <div class="error" id="mobileError"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Address : </td>
+                    <td>
+                        <input type="text" name="addr" placeholder="Enter Full address" 
+                               minlength="10" required>
+                        <div class="error" id="addressError"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td> </td>
+                    <td><input type="submit" value="SUBMIT"> <input type="reset" value="RESET"> </td>
+                </tr>
+                <tr>
+                    <td> If you are already Register <a href="{%url 'std_login' %}" style="color: aqua;"> here to Login</a></td>
+                </tr>
+            </table>
+        </form>
+    </center>
+
+    <script>
+        // Real-time validation feedback
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[required]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    validateField(this);
+                });
+            });
+        });
+
+        function validateField(field) {
+            const errorElement = document.getElementById(field.name + 'Error');
+            
+            if (field.validity.valid) {
+                errorElement.textContent = '';
+                field.style.borderColor = 'green';
+            } else {
+                showError(field, errorElement);
+                field.style.borderColor = 'red';
+            }
+        }
+
+        function showError(field, errorElement) {
+            if (field.validity.valueMissing) {
+                errorElement.textContent = 'This field is required';
+            } else if (field.validity.patternMismatch) {
+                errorElement.textContent = field.title; // Show the title as error message
+            } else if (field.validity.tooShort) {
+                errorElement.textContent = `Minimum length is ${field.minLength} characters`;
+            }
+        }
+    </script>
+</body>
+</html>

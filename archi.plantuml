@@ -1,0 +1,28 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+
+rectangle "Raw Traffic" as traffic
+rectangle "Data Ingestion" as ingestion
+rectangle "Preprocessing" as preprocess
+rectangle "Feature Engineering" as features
+rectangle "Behavioral Engine (LSTM)" as lstm
+rectangle "Anomaly Detector (Autoencoder)" as autoencoder
+rectangle "Correlation & Scoring" as scoring
+rectangle "Automated Response Engine" as response
+rectangle "Feedback Learning Loop" as feedback
+
+traffic --> ingestion
+ingestion --> preprocess
+preprocess --> features
+features --> lstm
+features --> autoencoder
+lstm <--> autoencoder
+lstm --> scoring
+autoencoder --> scoring
+scoring --> response
+response --> feedback
+feedback --> lstm : Model Updates
+feedback --> autoencoder : Model Updates
+
+@enduml
